@@ -16,6 +16,7 @@ pub struct App {
     pub events: EventHandler,
 }
 
+/// Implements the default trait for [`App`].
 impl Default for App {
     fn default() -> Self {
         Self {
@@ -26,6 +27,7 @@ impl Default for App {
     }
 }
 
+/// Basic application that uses the [`ratatui`] crate to render a terminal user interface.
 impl App {
     /// Constructs a new instance of [`App`].
     pub fn new() -> Self {
@@ -78,10 +80,12 @@ impl App {
         self.running = false;
     }
 
+    /// Increment the counter.
     pub fn increment_counter(&mut self) {
         self.counter = self.counter.saturating_add(1);
     }
 
+    /// Decrement the counter.
     pub fn decrement_counter(&mut self) {
         self.counter = self.counter.saturating_sub(1);
     }

@@ -7,6 +7,4 @@ pub mod logic {
 pub mod ui {
     pub mod app;
     pub mod ui;
-
-    //pub struct Solution;
 }
