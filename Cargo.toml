@@ -10,6 +10,10 @@ edition = "2024"
 name = "start"
 path = "bin/start.rs"
 
+[[bin]]
+name = "proxy"
+path = "bin/proxy.rs"
+
 # cargo run --release
 [profile.release]
 opt-level = 3
@@ -24,3 +28,7 @@ futures = "0.3.31"
 ratatui = "0.29.0"
 tokio = { version = "1.40.0", features = ["full"] }
 color-eyre = "0.6.3"
+bytes = "1.7.1"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+serde = { version = "1.0", features = ["derive"] }
