@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[Terminal] Run (debug)",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=start",
+                    "--package=robot"
+                ],
+                "filter": {
+                    "name": "start",
+                    "kind": "bin"
+                },
+                "cwd": "${workspaceFolder}"
+            },
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}",
+            /* "envFile": "${workspaceFolder}/config/local.env", */
+            "args": []
+        }
+    ]
+}

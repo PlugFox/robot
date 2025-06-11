@@ -1,0 +1,310 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "rAthena:build:docker",
+            "detail": "Build rAthena server using Docker.",
+            "icon": {
+                "color": "terminal.ansiBlue",
+                "id": "azure"
+            },
+            "type": "shell",
+            "command": "docker",
+            "options": {
+                "cwd": "${workspaceFolder}/rathena",
+                "env": {
+                    "MYSQL_ROOT_PASSWORD": "ragnarok",
+                    "MYSQL_DATABASE": "ragnarok",
+                    "MYSQL_USER": "ragnarok",
+                    "MYSQL_PASSWORD": "ragnarok"
+                }
+            },
+            "osx": {
+                "args": [
+                    "buildx",
+                    "build",
+                    "--platform=linux/arm64",
+                    "--build-arg=PACKETVER=\"20131223\"",
+                    "--build-arg=UBUNTU_VERSION=24.04",
+                    "--build-arg=BUILD_DATE=$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")",
+                    "--build-arg=VCS_REF=$(git rev-parse HEAD)",
+                    "--build-arg=VCS_URL=$(git config --get remote.origin.url)",
+                    "--tag=plugfox/ragnarok-online:rathena-local",
+                    "--file=tools/docker/compile.dockerfile",
+                    "."
+                ]
+            },
+            "windows": {
+                "args": [
+                    "buildx",
+                    "build",
+                    "--platform=linux/amd64",
+                    "--build-arg=PACKETVER=\"20131223\"",
+                    "--build-arg=UBUNTU_VERSION=24.04",
+                    "--build-arg=BUILD_DATE=$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")",
+                    "--build-arg=VCS_REF=$(git rev-parse HEAD)",
+                    "--build-arg=VCS_URL=$(git config --get remote.origin.url)",
+                    "--tag=plugfox/ragnarok-online:rathena-local",
+                    "--file=tools/docker/compile.dockerfile",
+                    "."
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "docker:compose:up",
+            "detail": "Start Docker services",
+            "icon": {
+                "color": "terminal.ansiGreen",
+                "id": "cloud"
+            },
+            "type": "shell",
+            "command": [
+                "docker compose --env-file=.env --file='docker-compose.yml' --profile=server --project-name='ragnarok' up -d"
+            ],
+            "args": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "docker"
+            }
+        },
+        {
+            "label": "docker:compose:down",
+            "detail": "Stop Docker services",
+            "icon": {
+                "color": "terminal.ansiRed",
+                "id": "cloud"
+            },
+            "type": "shell",
+            "command": [
+                "docker compose --project-name=ragnarok --profile=server down"
+            ],
+            "args": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "never",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false,
+                "group": "docker"
+            }
+        },
+        {
+            "label": "site:dart:pub:get",
+            "detail": "Get dependencies for the site.",
+            "icon": {
+                "color": "terminal.ansiGreen",
+                "id": "cloud-download"
+            },
+            "dependsOn": [],
+            "type": "shell",
+            "command": [
+                "dart pub get"
+            ],
+            "args": [],
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/site"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false,
+                "group": "dart"
+            }
+        },
+        {
+            "label": "site:dart:build_runner:all",
+            "detail": "Generate code for the site.",
+            "icon": {
+                "color": "terminal.ansiGreen",
+                "id": "code"
+            },
+            "type": "shell",
+            "command": [
+                "dart run build_runner build --delete-conflicting-outputs",
+                "&& dart format --fix -l 120 lib test"
+            ],
+            "dependsOn": [
+                "dart:pub:get"
+            ],
+            "args": [],
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/site"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false,
+                "group": "dart"
+            }
+        },
+        {
+            "label": "site:dart:format",
+            "detail": "Format all files in the site.",
+            "icon": {
+                "color": "terminal.ansiGreen",
+                "id": "lightbulb-autofix"
+            },
+            "type": "shell",
+            "command": [
+                "dart format --fix -l 120 lib test"
+            ],
+            "dependsOn": [],
+            "args": [],
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/site"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false,
+                "group": "dart"
+            }
+        },
+        {
+            "label": "site:dart:test:all",
+            "detail": "Run all tests for the site.",
+            "icon": {
+                "color": "terminal.ansiGreen",
+                "id": "bug",
+            },
+            "dependsOn": [
+                "dart:pub:get"
+            ],
+            "type": "shell",
+            "command": [
+                "dart test --color --concurrency=50 --reporter=expanded --timeout=30s test/unit_test.dart"
+            ],
+            "args": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/site"
+            },
+            "isBackground": false,
+            "presentation": {
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false,
+                "group": "dart"
+            }
+        },
+        {
+            "label": "api:cargo:lint",
+            "detail": "Lint Rust API using cargo clippy.",
+            "type": "shell",
+            "command": "cargo clippy",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        },
+        {
+            "label": "api:cargo:format",
+            "detail": "Format Rust API using cargo fmt.",
+            "type": "shell",
+            "command": "cargo fmt",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "group": {
+                "kind": "none",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "api:cargo:test",
+            "detail": "Run tests for Rust API using cargo test.",
+            "type": "shell",
+            "command": "cargo test",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        },
+        {
+            "label": "api:cargo:build",
+            "detail": "Build Rust API using cargo build.",
+            "type": "shell",
+            "command": "cargo build",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        }
+    ]
+}
