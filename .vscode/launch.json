@@ -34,7 +34,7 @@
                     "--package=robot"
                 ],
                 "filter": {
-                    "name": "start",
+                    "name": "proxy",
                     "kind": "bin"
                 },
                 "cwd": "${workspaceFolder}"
