@@ -12,11 +12,11 @@ async fn main() -> Result<()> {
     // Parse command line arguments or use defaults
     let listen_addr = std::env::args()
         .nth(1)
-        .unwrap_or_else(|| "127.0.0.1:6900".to_string());
+        .unwrap_or_else(|| "0.0.0.0:6900".to_string());
 
     let target_addr = std::env::args()
         .nth(2)
-        .unwrap_or_else(|| "127.0.0.1:6121".to_string());
+        .unwrap_or_else(|| "80.240.28.210:6900".to_string());
 
     println!("🤖 Starting Ragnarok Online TCP Proxy");
     println!("📡 Listen address: {}", listen_addr);
